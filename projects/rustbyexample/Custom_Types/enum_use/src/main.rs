@@ -25,11 +25,17 @@ fn main() {
     // automatically 'use' each name inside 'Work
     use crate::Work::*;
 
+    /*
+        // without use
+        let status = Status::Poor;
+        let work = Work::Civilian;
+    */ 
+    // With `use`
     // Equivalent to 'Status::Poor
-    let status = Poor;
+    let status = Rich;
 
     // Equivalent to Work::Civilian
-    let work = Civilian;
+    let work = Soldier;
 
     match status {
         // note the lack of scoping because the explicit 'use' above.
