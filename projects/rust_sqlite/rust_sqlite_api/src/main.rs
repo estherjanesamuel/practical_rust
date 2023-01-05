@@ -1,10 +1,33 @@
-use actix_web::http::StatusCode;
-use actix_web::web::{Data, Json};
-use actix_web::{web,HttpResponse,Error};
-use anyhow::{Result, Ok};
+#[macro_use]
+extern crate diesel;
 
-pub mod routes;
+mod models;
+mod routes;
+mod schema;
 
-fn main() {
-    println!("Hello, world!");
+use actix_web::{web, App, HttpServer};
+use diesel::r2d2::{self, ConnectionManager};
+
+
+pub type Pool = r2d2::Pool<ConnectionManager>;
+
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
+    dotenv::dotenv().ok();
+
+    let database_url = std::env::var("DATABASE_URL").expect("NOT FOUND");
+    let database_pool = Pool::builder()
+        .build(ConnectionManager::new(database_url))
+        .unwrap();
+
+    HttpServer::new(move || {
+        App::new()
+            .data(database_pool.clone())
+            .route("/", web::get().to(routes::root))
+            .route("/users", web::post().to(routes::create_user))
+            .route("/getusers", web::get().to(routes::get_users))
+    })
+    .bind("localhost:8080")?
+    .run()
+    .await
 }

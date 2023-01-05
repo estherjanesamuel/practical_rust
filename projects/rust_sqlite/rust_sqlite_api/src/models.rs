@@ -1,13 +1,12 @@
 use crate::schema::*;
-use serde::{Serialize, Deserialize};
-
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Queryable)]
 pub struct User {
     pub id: i32,
     pub name: String,
     pub address: String,
-    pub date_created: String,
+    pub date_create: String,
 }
 
 #[derive(Debug, Insertable)]
