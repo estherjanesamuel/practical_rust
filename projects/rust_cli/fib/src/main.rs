@@ -1,11 +1,11 @@
 fn main() {
     let nths = [1,2,3,4,5,6,7,8,9,10,90,91,92,93,94,95,96];
     for nth in nths {
-        println!("Fibonacci {} = {}", nth, fib(nth));
+        println!("Fibonacci {} = {}", nth, fib(nth).expect("Fibonacci calculation failed"));
     }
 }
 
-fn fib(n: u8) -> u64{
+fn fib(n: u8) -> Result<u64, &'static str>{
     let mut prev: u64 = 0;
     let mut curr: u64 = 1;
     for _ in 1..n {
@@ -21,5 +21,8 @@ fn fib(n: u8) -> u64{
             }
         }
     }
-    curr
+    match curr == 0 {
+        false => Ok(curr),
+        true => Err("Calculation overflow")
+    }
 }
